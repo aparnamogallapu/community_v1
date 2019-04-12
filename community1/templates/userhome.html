@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="background: url({% static 'img/log' %}.jpg); background-size:cover ">
+<table align="center">
+    <tr><td><font size="8" face="Arial" color="#f8f8ff">WelCome {{ res.name }}</font></td></tr></table>
+    <table align="center" border="2">
+        <!--<tr><th width="100"><a href="/home/?type=home">Home</a> </th>-->
+    <th width="150" height="30" ><a href="/profile/?type={{ res.flat_no }}">Profile</a> </th>
+    <th width="150" ><a href="/payment/?type={{ res.flat_no }}">Payment</a> </th>
+    <th width="150"><a href="/complaint/?type={{ res.flat_no }}">Complaint</a> </th>
+    <th width="150"><a href="/booking/?type={{ res.flat_no }}">Booking</a> </th>
+    <th width="150"><a href="/allbills/?type={{ res.flat_no }}">viewallbills</a> </th>
+    <th width="150"><a href="/userlogout/">Logout</a> </th></tr>
+    </table>
+
+{% if type == 'u_pro' %}
+    <table align="center" border="2" >
+        <tr><td><font color="#f8f8ff">flat_no={{ res.flat_no }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">name={{ res.name }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">contact={{ res.contact }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">occupation={{ res.occupation }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">flat_type={{ res.flat_type }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">block_name={{ res.block_name }}</font></td></tr>
+        <tr><td><font color="#f8f8ff">email={{ res.email }}</font></td></tr>
+        <td><a href="/profileupdate/?type={{ res.flat_no }}"><font color="#b8860b">update</font></a> </td>
+        <td>
+            <form action="/profiledelete/" method="post">
+                {% csrf_token %}
+            <input type="submit" value="delete">
+            <input type="hidden" value="{{ res.flat_no }}" name="delete_pro">
+        </form></td></tr>
+    </table>
+{% endif %}
+
+{% if type == 'del' %}
+    <h3><font color="#b8860b">Are u Sure To delete</font></h3>
+    <form action="/prodel/" method="post">
+    {% csrf_token %}
+    <input type="radio" name="d1" value="Yes">Yes
+    <input type="radio" name="d1" value="No">No
+    <input type="hidden" value="{{ res.flat_no }}" name="delete" >
+    <input type="submit" value="delete">
+ </form>
+{% endif %}
+
+
+
+{% if type == 'profileupdate' %}
+    <form action="/updatesave/" method="post">
+    {% csrf_token %}
+    <table align="center">
+    <tr><th><input type="text" placeholder="block" required name="b" value="{{ res.block_name }}" readonly> </th></tr>
+    <tr><th><input type="text" placeholder="ftype" required name="ft" value="{{ res.flat_type }}" readonly> </th></tr>
+    <tr><th><input type="text" placeholder="fnumber" required name="fno" value="{{ res.flat_no }}" readonly> </th></tr>
+    <tr><th><input type="text" placeholder="name" required name="u_name" value="{{ res.name }}" > </th></tr>
+    <tr><th><input type="number" placeholder="Contact_No" required name="u_cno" value="{{ res.contact }}"> </th></tr>
+    <tr><th><input type="email" placeholder="Email_Id" required name="u_email" value="{{ res.email }}"> </th></tr>
+    <tr><th><input type="text" placeholder="Occupation" required name="u_occupation" value="{{ res.occupation }}"> </th></tr>
+    <tr><th><input type="password" placeholder="Password" required name="u_upass" value="{{ res.password }}" readonly> </th></tr>
+    <tr><th><input type="submit" value="Update"></th></tr></table>
+    <tr><th>{{ mess }}</th></tr>
+    </form>
+{% endif %}
+
+
+
+
+
+
+
+<table align="center">
+    {% if type == 'u_pay' %}
+    <form action="/savepayment/" method="post">
+        {% csrf_token %}
+        <table align="center">
+            <tr><th><h3><font color="#dc143c"> Maintance Payment</font></h3></th></tr>
+            <tr><th><input type="text" placeholder="flat_no" name="fno" value="{{ res.flat_no }}" readonly></th></tr>
+            <tr><th><input type="text" placeholder="flat_type" name="ft" value="{{ res.flat_type }}" readonly></th></tr>
+            <tr><th><input type="text" placeholder="block_name" name="bn" value="{{ res.block_name }}" readonly></th></tr>
+            <tr><th><input type="text" placeholder="name" name="name"></th></tr>
+            <tr><th><input type="number" placeholder="amount" name="amt"></th></tr>
+{#            <tr><th><input type="text" placeholder="paymode" name="paymode"></th></tr>#}
+            <tr><th>paymode</th></tr>
+            <tr><th><select name="paymode"><option>Debit Card</option>
+            <option>Credit Card</option>
+            <option>Net Banking</option></select></th></tr>
+            <tr><th><input type="date" placeholder="date" name="date"></th></tr>
+            <tr><th><input type="submit" value="Pay"></th></tr>
+            <tr><th>{{ mes }}</th></tr>
+        </table>
+    </form>
+</table>
+{% endif %}
+
+{% if type == 'u_book' %}
+<form action="/savebooking/" method="post">
+    {% csrf_token %}
+    <table align="center">
+        <tr><th><h3><font color="#dc143c">Hall Booking</font></h3></th></tr>
+        <tr><th><input type="text" placeholder="flat_no" name="fno" value="{{ res.flat_no }}" readonly></th></tr>
+        <tr><th><input type="text" placeholder="flat_type" name="ft" value="{{ res.flat_type }}" readonly></th></tr>
+        <tr><th><input type="text" placeholder="block_name" name="bn" value="{{ res.block_name }}" readonly></th></tr>
+    <tr><th><input type="text" placeholder="Enter name" name="u_name" required></th></tr>
+    <!--<tr><th><input type="number" placeholder="Enter flat_no" name="u_fno" value="{{ flat }}" required readonly></th></tr>-->
+{#        pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"#}
+    <tr><th><input type="email" placeholder="Enter email"  name="u_email" required></th></tr>
+    <tr><th><input type="text" placeholder="Enter Booking Purpose" required name="u_pur"></th></tr>
+    <tr><th><input type="date" placeholder="Enter Booking Date" name="u_date" required></th></tr>
+    <tr><th><textarea  type="text" placeholder="Messege" name="u_mes"></textarea></th></tr>
+        <tr><th><input type="submit" value="Send"></th></tr>
+        </table>
+</form>
+{% endif %}
+
+{% if type == 'u_comp' %}
+<form action="/savecomplaint/" method="post">
+    {% csrf_token %}
+    <table align="center">
+        <tr><th><h3><font color="#dc143c">Complaints</font></h3></th></tr>
+        <tr><th><input type="text" placeholder="flat_no" name="fno" value="{{ res.flat_no }}" readonly></th></tr>
+        <tr><th><input type="text" placeholder="flat_type" name="ft" value="{{ res.flat_type }}" readonly></th></tr>
+        <tr><th><input type="text" placeholder="block_name" name="bn" value="{{ res.block_name }}" readonly></th></tr>
+    <tr><th><input type="text" placeholder="Enter name" name="u_name" required></th></tr>
+    <tr><th><input type="email" placeholder="Enter email" name="u_email" required></th></tr>
+         <tr><th><input type="date" placeholder="Enter Booking Date" name="u_date" required></th></tr>
+        <tr><th><textarea placeholder="Enter your complaint" name="u_com" required></textarea></th></tr>
+    <tr><th><input type="submit" value="send"></th></tr>
+    </table>
+</form>
+        {% endif %}
+
+{% if type == 'bills' %}
+    <font color="red"> Waterbill={{ waterbill }}</font><br>
+    <font color="red"> Electricitybill={{ electricitybill }}</font><br>
+    <font color="red"> Salarybill={{ salarybill }}</font>
+{% endif %}
+
+</body>
+</html>

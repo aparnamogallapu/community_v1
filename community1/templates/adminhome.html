@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="background: url({% static 'img/admin' %}.jpg); background-size:cover ">
+<table align="center">
+    <tr><td><font size="8" color="#f8f8ff" face="Arial">Residential Community</font></td></tr></table>
+    <table align="center" border="2"><tr>
+        <!--<th width="100"><a href="/home/?type=home">Home</a> </th>-->
+        <th width="150" height="30" bgcolor="#7fffd4" ><a href="/bills/?type=a_bill">Bills</a> </th>
+        <th width="150" bgcolor="#7fffd4"><a href="/viewbooking/">ViewBooking</a> </th>
+        <th width="150" bgcolor="#7fffd4" ><a href="/viewcomplaint/">Viewcomplaint</a> </th>
+        <th width="150" bgcolor="#7fffd4"><a href="/viewuser/">ViewUser</a> </th>
+        <th width="150" bgcolor="#7fffd4"><a href="/adminlogout/">Logout</a> </th>
+    </table>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+
+{% if type == 'a_bill' %}
+<form action="//" method="post">
+    {% csrf_token %}
+    <table align="leftside" >
+        <tr><th><h1><font color="aqua"> Bill</font></h1></th></tr>
+        <tr><th><a href="/electricity/?type=e_bill"><font color="aqua">Electricity</font></a> </th><tr>
+        <tr><th><a href="/water/?type=w_bill"><font color="aqua">Water</font></a> </th></tr>
+        <tr><th><a href="/salary/?types=s_bill"><font color="aqua">Salary</font></a> </th></tr>
+
+    </table>
+</form>
+    <tr></tr>
+<tr></tr>
+<tr></tr>
+{% endif %}
+{% if type == 'e_bill' %}
+<form action="/saveebill/"method="post">
+{% csrf_token %}
+    <table align="leftside" border="2">
+        <tr><th><font color="aqua">Electricity Bill</font></th></tr>
+        <tr><th><input type="number" placeholder="amount" required name="e_amt" value="{{ eb.amount }}"></th></tr>
+        <tr><th><input type="date" placeholder="date" required name="e_date"  value="{{ eb.date }}"></th></tr>
+        <tr><th><input type="submit" value="Save"></th></tr>
+    </table>
+</form>
+    <table>
+        <tr><th><a href="/water/?type=w_bill"><font color="aqua">Water</font></a> </th></tr>
+        <tr><th><a href="/salary/?types=s_bill"><font color="aqua">Salary</font></a> </th></tr>
+    </table>
+    {% if not res %}
+    <h2>No Data Found</h2>
+    {% else %}
+    <table border="2" align="center">
+        <tr><th><font color="aqua">amount</font></th><th><font color="#dc143c">date</font></th>
+            <th><font color="aqua">update</font></th><th><font color="#dc143c">delete</font></th></tr>
+    {% for x in res %}
+        <tr><td><font color="aqua">{{ x.amount }}</font></td>
+            <td><font color="aqua">{{ x.date}}</font></td>
+            <td><a href="/openupdatee/?update_ebill={{ x.date.year }}-{{ x.date.month }}-{{ x.date.day }}"><font color="#f8f8ff">update</font></a> </td>
+        <td><form action="/deletee/" method="post">
+                {% csrf_token %}
+            <input type="hidden" value="{{ x.date.year }}-{{ x.date.month }}-{{ x.date.day }}" name="delete_ebill" >
+             <input type="submit" value="delete">
+        </form></td></tr>
+    {% endfor %}
+    </table>
+{% endif %}
+{% endif %}
+
+{% if type == 'updateebilldata' %}
+    <form action="/updateebillsave/" method="post">
+    {% csrf_token %}
+        <table align="center">
+            <tr><td><input type="number" value="{{ eb.amount }}" placeholder="amount" name="amount"></td></tr>
+            <tr><td>
+                <input type="text" value="{{ eb.date.year }}-{{ eb.date.month }}-{{ eb.date.day }}" placeholder="date" name="date" readonly>
+                </td></tr>
+            <tr><td><input type="submit" value="update ebill"></td></tr>
+        </table>
+    </form>
+{% endif %}
+
+{% if type == 'w_bill' %}
+<form action="/savewbill/"method="post">
+{% csrf_token %}
+    <table align="leftside" border="2">
+        <tr><th><font color="aqua">Water Bill</font></th></tr>
+        <tr><th><input type="number" placeholder="amount" required name="w_amt" value="{{ wb.amount }}"></th></tr>
+        <tr><th><input type="date" placeholder="date" required name="w_date" value="{{ wb.date }}"></th></tr>
+        <tr><th><input type="submit" value="Save"></th></tr>
+    </table>
+</form>
+    <table>
+        <tr><th><a href="/electricity/?type=e_bill"><font color="aqua">Electricity</font></a> </th><tr>
+        <tr><th><a href="/salary/?types=s_bill"><font color="aqua">Salary</font></a> </th></tr>
+    </table>
+
+    {% if not res %}
+        <h2> No Data Found</h2>
+        {% else %}
+        <table align="center" border="2">
+            <tr><th><font color="aqua">Amount</font></th><th><font color="aqua">Date</font></th>
+                <th><font color="aqua">Update</font></th>
+                <th><font color="aqua">Delete</font></th></tr>
+        {% for x in res %}
+            <tr><td><font color="aqua">{{ x.amount }}</font></td>
+                <td><font color="aqua">{{ x.date  }}</font></td>
+                <td><a href="/openupdatew/?update_wbill={{ x.date.year }}-{{ x.date.month }}-{{x.date.day }}"><font color="#f8f8ff">Update</font></a> </td>
+            <td><form action="/deletew/" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+            <input type="hidden" value="{{ x.date.year }}-{{ x.date.month }}-{{ x.date.day }}" name="delete_wbill">
+
+            </form></td></tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+{% endif %}
+
+{% if type == 'uptb'  %}
+    <table>
+<form action="/savesbill/" method="post">
+{% csrf_token %}
+    <table align="leftside" border="0">
+        <tr><th colspan="2"><font color="aqua"><h2>Salary Bill</h2></font></th></tr>
+        <tr><th colspan="2"><font color="aqua">Manager</font></th></tr>
+        <tr><th><input type="text" placeholder="name" required name="m_name" id="m_name" value="{{ uptbil.manager_name }}"></th>
+        <th><input type="number" placeholder="salary" required name="m_sal" value="{{ uptbil.manager_salary }}"></th></tr>
+        <tr><th colspan="2"><font color="red">Incharge</font></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch1_name" value="{{ uptbil.incharege1_name }}"></th>
+            <th><input type="number" placeholder="salary" name="inch1_sal" value="{{ uptbil.incharege1_salary }}"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch2_name" value="{{ uptbil.incharege2_name }}"></th>
+            <th><input type="number" placeholder="salary" name="inch2_sal" value="{{ uptbil.incharege2_salary }}"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch3_name" value="{{ uptbil.incharege3_name }}"></th>
+        <th><input type="number" placeholder="salary" name="inch3_sal" value="{{ uptbil.incharege3_salary }}"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch4_name" value="{{ uptbil.incharege4_name }}"></th>
+        <th><input type="number" placeholder="salary" name="inch4_sal" value="{{ uptbil.incharege4_salary }}"></th></tr>
+        <tr><th colspan="2"><font color="red">Security</font></th></tr>
+        <tr><th><input type="number" placeholder="Total security" name="sec_no" value="{{ uptbil.total_security }}"></th>
+        <th><input type="number" placeholder="salary" name="sec_sal" value="{{ uptbil.security_salary }}"></th></tr>
+        <tr><th><input type="date" placeholder="date" required name="s_date" value="{{ uptbil.date }}"></th></tr>
+        <tr><th colspan="2"><input type="submit" value="Save" ></th></tr>
+        <tr><th colspan="2"><font color="red">Total Salary</font></tr></table></form>
+        <form action="/tot1/" method="post">
+        {% csrf_token %}
+        <tr><th><input type="hidden" value="{{ date }}" name="tdate">
+            <input type="number" placeholder="total amount" name="tol_sal" value="{{ res }}"></th></tr>
+        <tr><th colspan="2"><input type="submit" value="Save" ></th></tr>
+            {{ msg }}</form>
+    </table>
+
+{% endif %}
+
+{% if type == 'updatewbilldata' %}
+    <form action="/updatewbillsave/" method="post">
+    {% csrf_token %}
+        <table align="center">
+            <tr><td><input type="number" value="{{ wb.amount }}" placeholder="amount" name="amount"></td></tr>
+            <tr><td>
+                <input type="text" value="{{ wb.date.year }}-{{ wb.date.month }}-{{ wb.date.day }}" placeholder="date" name="date" readonly>
+                </td></tr>
+            <tr><td><input type="submit" value="update wbill"></td></tr>
+        </table>
+    </form>
+{% endif %}
+
+{% if type == 's_bill' %}
+<form action="/savesbill/" method="post">
+{% csrf_token %}
+    <table align="leftside" border="0">
+        <tr><th colspan="2"><font color="aqua"><h2>Salary Bill</h2></font></th></tr>
+        <tr><th colspan="2"><font color="aqua">Manager</font></th></tr>
+        <tr><th><input type="text" placeholder="name" required name="m_name" id="m_name"></th>
+        <th><input type="number" placeholder="salary" required name="m_sal"></th></tr>
+        <tr><th colspan="2"><font color="aqua">Incharge</font></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch1_name"></th>
+            <th><input type="number" placeholder="salary" name="inch1_sal"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch2_name"></th>
+            <th><input type="number" placeholder="salary" name="inch2_sal"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch3_name"></th>
+        <th><input type="number" placeholder="salary" name="inch3_sal"></th></tr>
+        <tr><th><input type="text" placeholder="name" name="inch4_name"></th>
+        <th><input type="number" placeholder="salary" name="inch4_sal"></th></tr>
+        <tr><th colspan="2"><font color="aqua">Security</font></th></tr>
+        <tr><th><input type="number" placeholder="Total security" name="sec_no"></th>
+        <th><input type="number" placeholder="salary" name="sec_sal"></th></tr>
+        <tr><th><input type="date" placeholder="date" required name="s_date"></th></tr>
+        <tr><th colspan="2"><input type="submit" value="Save" ></th></tr>
+        <tr><th colspan="2"><font color="aqua">Total Salary</font></tr></table></form>
+        <form action="/tot/" method="post">
+        {% csrf_token %}
+        <tr><th><input type="hidden" value="{{ date }}" name="tdate">
+            <input type="number" placeholder="total amount" name="tol_sal" value="{{ res }}"></th></tr>
+        <tr><th colspan="2"><input type="submit" value="Save" ></th></tr>
+            {{ msg }}</form>
+    </table>
+<table>
+        <tr><th><a href="/electricity/?type=e_bill"><font color="aqua">Electricity</font></a> </th><tr>
+        <tr><th><a href="/salary/?types=s_bill"><font color="aqua">Water</font></a> </th></tr>
+    </table>
+</form>
+{% endif %}
+
+
+{% if type == 's_bill' %}
+        <table align="center" border="2">
+            <tr><th><font color="aqua">Amount</font></th>
+                <th><font color="aqua">Date</font></th>
+                <th><font color="aqua">Update</font></th>
+                <th><font color="aqua">Delete</font></th></tr>
+        {% for x in salbil %}
+            <tr><td><font color="aqua">{{ x.total_sal }}</font></td>
+                <td><font color="aqua">{{ x.date  }}</font></td>
+                <td><a href="/openupdatesal/?update_sbill={{ x.date.year }}-{{ x.date.month }}-{{x.date.day }}"><font color="#f8f8ff">Update</font></a> </td>
+            <td><form action="/deletesal/" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+            <input type="hidden" value="{{ x.date.year }}-{{ x.date.month }}-{{ x.date.day }}" name="delete_sbill">
+
+            </form></td></tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+
+
+
+
+{% if type == 'v_comp' %}
+<form action="//" method="post">
+    {% csrf_token %}
+    <table align="center" >
+        <tr><th><h3>View complaints</h3></th></tr>
+    </table>
+    </form>
+{% endif %}
+
+
+{% if book %}
+{% for x in book %}
+    <table align="center" >
+        <tr><td><font color="aqua">{{ x.block_name }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.flat_no }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.flat_type }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.name }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.contact }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.email }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.occupation }}</font></td></tr>
+        <tr><td><font color="aqua">{{ x.booking_date }}</font></td></tr>
+    </table>
+{% endfor %}
+{% endif %}
+
+{% if display %}
+    {% for x in display %}
+        <table align="center" border="2">
+            <tr><td><font color="aqua">{{ x.block_name }}</font></td></tr>
+            <tr><td><font color="aqua">{{ x.flat_no}}</font></td></tr>
+            <tr><td><font color="aqua">{{ x.flat_type }}</font></td></tr>
+            <tr><td><font color="aqua">{{ x.name }}</font></td></tr>
+            <tr><td><font color="aqua">{{ x.email }}</font></td></tr>
+            <tr><td><font color="aqua"> {{ x.occupation }}</font></td></tr>
+            <tr><td><font color="aqua">{{ x.contact}}</font></td></tr>
+        </table>
+    {% endfor %}
+{% endif %}
+
+{% if complaint %}
+    {% for x in complaint %}
+        <table align="center" border="2">
+            <tr><td><font color="#f8f8ff">{{ x.block_name }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.flat_no }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.flat_type }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.name }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.email }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.date }}</font></td></tr>
+            <tr><td><font color="#f8f8ff">{{ x.complaint }}</font></td></tr>
+        </table>
+    {% endfor %}
+{% endif %}
+
+
+</body>
+</html>

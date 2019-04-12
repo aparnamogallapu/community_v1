@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="background: url({% static 'img/home' %}.jpg); background-size:cover ">
+<table align="center">
+    <tr><td><font size="8"color="#ff1493" face="Arial">Residential Community</font></td></tr></table>
+    <table align="center" border="2"><tr>
+        <th width="150" height="30" bgcolor="#b8860b" ><a href="/home/?type=home">Home</a> </th>
+        <th width="150" bgcolor="#b8860b"><a href="/user/?type=u_log">User</a> </th>
+        <th width="150" bgcolor="#b8860b"><a href="/admin/?type=a_log">Admin</a> </th>
+        <th width="150" bgcolor="#b8860b" ><a href="/about/?type=abt_us">AboutUs</a> </th>
+        <th width="150" bgcolor="#b8860b"><a href="/gallery/?type=v_gallery">Gallery</a> </th>
+        <th width="150" bgcolor="#b8860b"><a href="/viewevent/?type=v_event">ViewEvent</a> </th></tr>
+    </table>
+<tr></tr>
+<tr></tr>
+<tr></tr>
+
+{% if type == 'home' %}
+    <h4 class="text-black text-uppercase"align="center">Discover the Colorful World</h4>
+ <h1 class="text-uppercase" align="center"> Build Your Dream</h1>
+{% endif %}
+
+
+{% if type == 'abt_us' %}
+    <h1><font color="#fff8dc">Residential community -A Brief Profile</font></h1>
+    <p><font color="red">Established in the year 2002, Residential community Company achieved success through immense care in planning and choosing the right resources and execution, be it the drawings, construction material and Vaastu to a clear title. Our constant endeavour is always to provide the best for our customers. Today Residential community command respect and come with a premium tag, and this has earned with work, trust, and reliability.</font></p>
+
+    <p><font color="red">In the last one decade, Residential community has built many luxury projects that include Premium Villas and Hi-Rise Apartments which today bear a proud testimony to our efforts and are landmark structures in their respective environments.</p>
+
+    A classic trademark of all Residential community are its careful thought in providing ample greenery, modern designs that are luxurious, offer good spaces and thoughtful amenities thereby enhancing the property’s value and giving the customers a good return on their investments. It is no wonder that all Residential community command a premium value</font></p>
+{% endif %}
+
+
+{% if type == 'v_gallery' %}
+    <h1 align="center"><font color="#fff8dc">Photo Gallery</font> </h1>
+    <img src="{% static 'img/child.jpg' %}" width="450" height="250">
+    <img src="{% static 'img/event.jpg' %}" width="450" height="250">
+    <img src="{% static 'img/garden.jpg' %}" width="420" height="250" >
+    <img src="{% static 'img/play.jpg' %}" width="450" height="250">
+    <img src="{% static 'img/gym.jpg' %}" width="450" height="250">
+    <img src="{% static 'img/swimming.jpg' %}" width="420" height="250">
+    <img src="{% static 'img/hal.jpg' %}" width="450" height="250">
+    <img src="{% static 'img/ser.jpg' %}" width="450" height="250">
+{% endif %}
+
+{% if type == 'v_event' %}
+    <h1 align="center"><font color="red">Events</font> </h1>
+    <h3 align="center"><font color="black">
+    <li >NewYear</li>
+    <li >Ganesh Chatruthi</li>
+    <li >Dasara</li>
+    </font></h3>
+{% endif %}
+
+
+{% if type == 'a_log' %}
+<form action="/adminlogin/" method="post">
+    {% csrf_token %}
+    <table align="center">
+        <tr><th><h2>AdminLogin</h2></th></tr>
+        <tr><th><input type="text" placeholder="Username" name="a_name" required></th></tr>
+        <tr><th><input type="password" placeholder="password" name="a_pass" required></th></tr>
+        <tr><th><input type="submit" value="Login"></th></tr>
+        <tr><th>{{ m1 }}</th></tr>
+    </table>
+</form>
+{% endif %}
+
+{% if type == 'u_log' %}
+<form action="/userlogin/" method="post">
+    {% csrf_token %}
+    <table align="center">
+        <tr><th><h2>UserLogin</h2></th></tr>
+        <tr><th><input type="text" placeholder="flat_no" name="u_name" required></th></tr>
+        <tr><th><input type="password" placeholder="password" name="u_pass" required></th></tr>
+        <tr><th><input type="submit" value="Login"></th></tr>
+        <tr><th><a href="/register/?type=u_reg">Registration</a></th></tr>
+        <tr><th>{{ mess }}</th></tr>
+    </table>
+</form>
+{% endif %}
+{% if type == 'u_reg' %}
+<table align="center">
+    <form action="/block/" method="post">
+        {% csrf_token %}
+    <tr><th>block:<select name="block_name" onselect="true">
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+        </select>
+    <input type="submit" value="select"></th></tr>
+        </form>
+<tr><th>
+
+<form action="/flat/" method="post">
+{% csrf_token %}
+<input type="hidden" value="{{ b1 }}" name="b1">
+Flat_type<select   name="flats">
+    {% for i in res %}
+        <option value= "{{ i }}">{{ i }}</option>
+    {% endfor %}
+</select>
+<input type="submit" value="show">
+</form>
+
+</th></tr>
+<tr><th>
+
+<form action="/saveregister/" method="post">
+
+    {% csrf_token %}
+<input type="hidden" value="{{ b1 }}" name="b1">
+<input type="hidden" value="{{ ft }}" name="ft">
+
+    Flat_no:<select name="flat_no">
+
+    {% for i in res1 %}
+        <option value="{{ i }}">{{ i }}</option>
+    {% endfor %}
+    </select>
+
+    </th></tr>
+
+    <tr><th><input type="text" placeholder="Name" required name="u_name"> </th></tr>
+    <tr><th><input type="number" placeholder="Contact_No" required name="u_cno"> </th></tr>
+    <tr><th><input type="email" placeholder="Email_Id" required name="u_email"> </th></tr>
+    <tr><th><input type="text" placeholder="Occupation" required name="u_occupation"> </th></tr>
+    <!--<tr><th><input type="text" placeholder="Username" required name="u_uname"> </th></tr>-->
+    <tr><th><input type="password" placeholder="Password" required name="u_upass"> </th></tr>
+    <tr><th><input type="submit" value="Register"></th></tr>
+    <tr><th>{{ mess }}</th></tr>
+    </table>
+</form>
+{% endif %}
+
+</body>
+</html>
